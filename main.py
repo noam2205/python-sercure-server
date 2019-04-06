@@ -21,7 +21,7 @@ while True:
 		client, addr = server_socket.accept()
 		print str(addr) + " connected"
 		transport = paramiko.Transport(client)
-		host_key = paramiko.RSAKey.from_private_key_file(current_path + "\server_rsa.key")
+		host_key = paramiko.RSAKey.from_private_key_file("server_rsa.key")
 		transport.add_server_key(host_key)
 		ssh_server = Server()
 		transport.start_server(server=ssh_server)

@@ -13,13 +13,13 @@ class SetupThread(threading.Thread):
 
 	def run(self):
 		current_path = os.path.realpath(os.getcwd()).__str__()
-		thread_dir=current_path+"\\"+self.getName()
+		thread_dir=current_path+os.sep+self.getName()
 		os.mkdir(thread_dir)
 		self.channel.send("Please submit the name of the .py file to run\r\n")
 		self.channel.send("Make sure both the file and the requirements file are in the working directory\r\n")
 		file_name = self.channel.recv(20)
 		sftp_client = paramiko.SFTPClient.from_transport(self.transport)
-		sftp_client.get(file_name,thread_dir+"\index.py")
+		sftp_client.get(file_name,thread_dir+os.sep+"index.py")
 		# checking if requirements file exists
 		try:
 			sftp_client.stat(file_name)
