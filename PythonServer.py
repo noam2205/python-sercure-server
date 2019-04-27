@@ -1,16 +1,16 @@
-
 import paramiko
 
 host_key = paramiko.RSAKey(filename="server_rsa.key")
-server_password = raw_input("Enter Server's Password: ")
 paramiko.util.log_to_file("PythonServer.log")
 
 
+# This class represents the setup for the server including: authentication methods and clients credentials handling
+
 class Server(paramiko.ServerInterface):
 
-	def __init__(self):
+	def __init__(self, server_password):
 		self.username = None
-		pass
+		self._password = server_password
 
 	def check_channel_request(self, kind, chanid):
 		if kind == "session":
@@ -22,7 +22,7 @@ class Server(paramiko.ServerInterface):
 		return paramiko.AUTH_SUCCESSFUL
 
 	def check_auth_password(self, username, password):
-		if password == server_password:
+		if password == self._password:
 			self.username = username
 			return paramiko.AUTH_SUCCESSFUL
 		return paramiko.AUTH_FAILED
@@ -33,8 +33,5 @@ class Server(paramiko.ServerInterface):
 	def check_channel_shell_request(self, channel):
 		return True
 
-	def check_channel_pty_request(
-			self, channel, term, width, height, pixelwidth, pixelheight, modes
-	):
+	def check_channel_pty_request(self, channel, term, width, height, pixelwidth, pixelheight, modes):
 		return True
-
